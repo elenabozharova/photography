@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Photograph me</title>
+    <style>
+        .user{
+            border: 2px solid black;
+        }
+    </style>
+</head>
+<body>
+        <table>
+            <thead><h1>Find a photographer for your photo shoot ideas</h1></thead>
+            <tr th:each="user : ${users}">
+                <td>
+                    <img style="max-width: 500px; max-height: 500px" th:src="*{'data:image/jpeg;base64,' + {user.getImageSrc()} }" th:if="${user.getImageSrc()}">
+                    <a th:href="@{'/users/{id}' (id=${user.getId()})}"><p th:text="${user.username}"></p></a>
+                </td>
+            </tr>
+        </table>
+</body>
+</html>

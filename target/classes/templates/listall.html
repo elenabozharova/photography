@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <style>
+        .row {
+           width: 50%;
+           margin-left: 25%;
+           margin-right: 15%;
+        }
+        .row .postedBy{
+            border: #211e1e;
+            position: relative;
+            width: 60%;
+        }
+        .postedBy img{
+            height: 50px;
+            width: 50px;
+            position: relative;
+            text-align: left;
+        }
+        .postedBy h4{
+           position: relative;
+           float:right;
+        }
+        .postedBy{
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+        a{
+            color: #211e1e;
+        }
+        .image{
+            margin-bottom: 5%;
+        }
+    </style>
+</head>
+<div class="container">
+    <div class="image" th:each="img : ${images}">
+        <div class="row">
+            <div class="postedBy">
+                <img style="max-width: 100px; max-height: 100px" th:src="*{'data:image/jpeg;base64,' + {img.getUser().getImageSrc()} }">
+                <h4 th:text="${img.getUser().getUsername()}"></h4>
+                <a th:href="@{'photos/edit/{id}' (id=${img.getId()})}" th:if="${user==loggedInUser}">Edit<i class="fas fa-camera-alt"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <img style="max-width: 500px; max-height: 500px" th:src="*{'data:image/jpeg;base64,' + {img.getImageSrc()} }">
+        </div>
+        <div class="row">
+            <div class="postedBy">
+                <h4 th:text="${img.getDescription()}"></h4>
+            </div>
+        </div>
+        <div class="row likes">
+            Date: <h1 th:text="${img.getDate()}"></h1>
+            Liked by: <h1 th:text="${img.getLikes().size()}"></h1> people
+            <th:block th:each="comment : ${comments}">
+                <h1 th:if="${comment.image.getId()} == ${img.getId()}" th:text="${comment.getUser().getUsername()}"></h1> commented:
+                <div th:if="${comment.image.getId()} == ${img.getId()}" th:text="${comment.getText()}">
+                </div>
+            </th:block>
+        </div>
+        <div class="row">
+            <form th:method="POST" th:action="@{'/photos/like/{id}' (id=${img.getId()})} " th:if="!${img.getLikes().contains(loggedInUser)}">
+              <button class="like" type="submit"><i class="far fa-heart" ></i></button>
+              <input type="text" th:value="${loggedInUser.getId()}" name="userId" hidden>
+            </form>
+
+            <form th:method="POST" th:action="@{'/photos/unlike/{id}' (id=${img.getId()})} " th:if="${img.getLikes().contains(loggedInUser)}">
+                <button class="liked" type="submit"><i class="fas fa-heart"></i></button>
+                <input type="text" th:value="${loggedInUser.getId()}" name="userId" hidden>
+            </form>
+
+            <div class="commentDiv">
+                <form th:method="POST" th:action="@{ '/comment/{id}' (id=${img.getId()})}">
+                <input type = "text" required id="comment" name="comment">
+                <button type="submit" id="commentBtn"><i class="fas fa-pencil">Comment</i></button>
+                <input type="text" th:value="${loggedInUser.getId()}" name="userId" hidden>
+                </form>
+            </div>
+
+        </div>
+</div>
+</div>
+
+<script th:inline="javascript">
+</script>
+</html>

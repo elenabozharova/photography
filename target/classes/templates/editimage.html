@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+<div>
+    <form th:method="POST" th:action="@{'/photos/edit/{id}' (id=${image.getId()})}">
+        <label for="description">Description</label>
+        <input id="description" class="form-control" type="text" name="description" th:value="${image.getDescription()}">
+        <label for="name"></label>
+        <input id="name" type="text" class="form-control" name="name" th:value="${image.getImgName()}">
+        <button type="submit">Save</button>
+    </form>
+
+    <form>
+        <button type="submit">Delete</button>
+    </form>
+</div>
+</body>
+</html>
